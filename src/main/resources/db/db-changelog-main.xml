@@ -1,0 +1,53 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="ID" value="uuid" dbms="postgresql"/>
+    <property name="DESCRIPTION" value="java.sql.Types.VARCHAR(140)" dbms="postgresql"/>
+    <property name="CPF" value="java.sql.Types.VARCHAR(11)" dbms="postgresql"/>
+    <property name="DATE" value="java.sql.Types.DATE" dbms="postgresql"/>
+    <property name="DELETED" value="java.sql.Types.INTEGER" dbms="postgresql"/>
+
+    <changeSet id="CreatedTablePessoa" author="alexander.tuma">
+        <createTable tableName="pessoa">
+            <column name="id" type="${ID}">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pessoa_pk"/>
+            </column>
+            <column name="nome" type="${DESCRIPTION}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cpf" type="${CPF}">
+                <constraints nullable="false" unique="true" uniqueConstraintName="pessoa_cpf_unique"/>
+            </column>
+            <column name="data_nascimento" type="${DATE}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="${DELETED}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CreatedTableUsuario" author="alexander.tuma">
+        <createTable tableName="usuario">
+            <column name="id" type="${ID}">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="usuario_pk"/>
+            </column>
+            <column name="password" type="${DESCRIPTION}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_ultimo_login" type="${DATE}"/>
+            <column name="pessoa_id" type="${ID}">
+                <constraints
+                        nullable="false"
+                        checkConstraint="pessoa_pessoa_id_nn"
+                        referencedColumnNames="id"
+                        foreignKeyName="pessoa_pessoa_fk"
+                        references="pessoa"
+                />
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
